@@ -40,7 +40,7 @@ export default function index() {
 
   useEffect(() => {
     window.onbeforeunload = () => {
-      console.log('hasChange', hasChange)
+      // console.log('hasChange', hasChange)
       // For Safari
       return hasChange ? 'Sure?' : undefined;
     };
@@ -74,7 +74,7 @@ export default function index() {
   }
 
   function handleContentChange(v: any) {
-    console.log('handleContentChange', v, docChapterDetail, 'staticDocChapterDetail', staticDocChapterDetail)
+    // console.log('handleContentChange', v, docChapterDetail, 'staticDocChapterDetail', staticDocChapterDetail)
     hasChange = true
     if (docChapterDetail) {
       docChapterDetail.content = v
@@ -87,7 +87,7 @@ export default function index() {
 
     const content = ref.current.getContent();
     if (content === staticDocChapterDetail.content) {
-      console.log('content no change')
+      // console.log('content no change')
       return;
     }
     docChapterDetailApi.update(staticDocChapterDetail.id, {content}).then(_res => {
@@ -102,7 +102,7 @@ export default function index() {
   }
 
   const loading = loadingEffect[docApi.getUrl(`getById/${id}`)]
-  if (loading) return <PageLoading/>
+  if (loading) return <PageLoading />
   if (doc === undefined) return <Empty description="文档不存在"/>
 
   const fetching = loadingEffect[docChapterDetailApi.getUrl('getOrCreateById')]
@@ -143,13 +143,8 @@ export default function index() {
           <div className="fa-flex-column fa-full fa-p12 fa-flex-column">
             {docChapterDetail && (
               <>
-                {/*<Space className="fa-mb12">*/}
-                {/*  <Button onClick={handleSave} type="primary">保存</Button>*/}
-                {/*  {saving && <Spin indicator={<LoadingOutlined style={{ fontSize: 14 }} spin />} />}*/}
-                {/*</Space>*/}
-
                 <FaFlexRestLayout>
-                  {docChapterDetail && (
+                  {docChapterDetail && !fetching && (
                     <BaseTinyMCE
                       ref={ref}
                       style={{width: '100%', height: '100%'}}
@@ -200,7 +195,7 @@ export default function index() {
           </div>
         </Allotment>
 
-        {fetching && <div className="fa-full-content fa-flex-center"><Spin size="large"/></div>}
+        {fetching && <div className="fa-full-content fa-flex-center" style={{ zIndex: 9999, cursor: 'wait', background: 'EEEEEE4C' }}><Spin size="large"/></div>}
 
         {/* Doc His */}
         <Drawer open={hisOpen} onClose={() => setHisOpen(false)} width={700} title="查看历史版本">
