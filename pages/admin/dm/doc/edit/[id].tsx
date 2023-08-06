@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { Drawer, Empty, Spin } from "antd";
 import { Allotment } from "allotment";
-import { ApiEffectLayoutContext, BaseTinyMCE, BaseTree, FaFlexRestLayout, FaUtils, PageLoading, ThemeLayoutContext } from "@fa/ui";
+import { ApiEffectLayoutContext, BaseTinyMCE, BaseTree, FaFlexRestLayout, PageLoading, ThemeLayoutContext } from "@fa/ui";
 import { Dm } from "@/types";
 import { docApi, docChapterApi, docChapterDetailApi } from "@/services";
 import { DocLayout } from "@features/fa-doc-pages/layout";
@@ -152,29 +152,10 @@ export default function index() {
                       onChange={handleContentChange}
                       onSave={handleSave}
                       editorInit={{
-                        toolbar: 'save blocks bold italic forecolor bullist numlist table link image media charmap emoticons codesample code fullscreen faDateBtn faTimeBtn faHis help',
+                        toolbar: 'save blocks bold italic forecolor bullist numlist table link image media charmap emoticons codesample code fullscreen insertdatetime faHis help',
                         content_style,
                         setup: (editor: any) => {
                           // console.log('setup', editor)
-
-                          /* 插入当前日期 */
-                          editor.ui.registry.addButton('faDateBtn', {
-                            text: '日期',
-                            tooltip: '插入当前日期',
-                            onAction: function () {
-                              editor.insertContent(`<span>${FaUtils.getCurDate()}</span>`);
-                            }
-                          });
-
-                          /* 插入当前时间 */
-                          editor.ui.registry.addButton('faTimeBtn', {
-                            text: '时间',
-                            tooltip: '插入当前时间',
-                            onAction: function () {
-                              editor.insertContent(`<span>${FaUtils.getCurDateTime()}</span>`);
-                            }
-                          });
-
                           /* 历史版本 */
                           editor.ui.registry.addButton('faHis', {
                             text: '历史版本',
@@ -184,6 +165,11 @@ export default function index() {
                             }
                           });
                         },
+                        // video_template_callback: (data:any) =>
+                        //   `<video width="${data.width}" height="${data.height}"${data.poster ? ` poster="${data.poster}"` : ''} controls="controls">\n` +
+                        //   `<source src="${data.source}"${data.sourcemime ? ` type="${data.sourcemime}"` : ''} />\n` +
+                        //   (data.altsource ? `<source src="${data.altsource}"${data.altsourcemime ? ` type="${data.altsourcemime}"` : ''} />\n` : '') +
+                        //   '</video>'
                       }}
                     />
                   )}
