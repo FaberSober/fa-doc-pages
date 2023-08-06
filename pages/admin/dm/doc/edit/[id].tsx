@@ -111,8 +111,9 @@ export default function index() {
   const bodyBgColor = themeDark ? '#08202f' : '#FFFFFF';
 
   let content_style = `html {background:${htmlBgColor};} `;
-  content_style += ` body { font-family:Helvetica,Arial,sans-serif; font-size:14px; width: 800px; margin: 12px auto; background: ${bodyBgColor}; padding: 12px; border-radius: 4px; } `
-  content_style += ' img {max-width: 800px; height: auto} '
+  content_style += ` body { font-family:"Microsoft YaHei", "Helvetica Neue", "PingFang SC"; font-size:14px; line-height: 1.2; width: 800px; margin: 12px auto; background: ${bodyBgColor}; padding: 12px; border-radius: 4px; } `
+  content_style += ' img {max-width: 800px; height: auto;} '
+  content_style += ' video {max-width: 800px; height: auto;} '
 
   return (
     <DocLayout doc={doc}>
@@ -152,7 +153,7 @@ export default function index() {
                       onChange={handleContentChange}
                       onSave={handleSave}
                       editorInit={{
-                        toolbar: 'save blocks bold italic forecolor bullist numlist table link image media charmap emoticons codesample code fullscreen insertdatetime faHis help',
+                        toolbar: 'save blocks fontsize fontfamily bold italic blockquote lineheight underline alignleft aligncenter alignright alignjustify anchor forecolor bullist numlist table link image media charmap emoticons codesample code fullscreen insertdatetime faHis help',
                         content_style,
                         setup: (editor: any) => {
                           // console.log('setup', editor)
