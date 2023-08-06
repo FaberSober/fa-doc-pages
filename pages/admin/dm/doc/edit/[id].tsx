@@ -153,7 +153,7 @@ export default function index() {
                       onChange={handleContentChange}
                       onSave={handleSave}
                       editorInit={{
-                        toolbar: 'save blocks fontsize fontfamily bold italic blockquote lineheight underline alignleft aligncenter alignright alignjustify anchor forecolor bullist numlist table link image media charmap emoticons codesample code fullscreen insertdatetime faHis help',
+                        toolbar: 'save blocks fontsize fontfamily bold italic underline blockquote lineheight alignleft aligncenter alignright alignjustify anchor forecolor bullist numlist table link image media charmap emoticons codesample code fullscreen insertdatetime faHis help',
                         content_style,
                         setup: (editor: any) => {
                           // console.log('setup', editor)
