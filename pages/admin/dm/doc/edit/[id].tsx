@@ -185,7 +185,7 @@ export default function index() {
         {fetching && <div className="fa-full-content fa-flex-center" style={{ zIndex: 9999, cursor: 'wait', background: 'EEEEEE4C' }}><Spin size="large"/></div>}
 
         {/* Doc His */}
-        <Drawer open={hisOpen} onClose={() => setHisOpen(false)} width={700} title="查看历史版本">
+        <Drawer open={hisOpen} onClose={() => setHisOpen(false)} width={900} title="查看历史版本">
           {docChapter && hisOpen && <DocChapterHisList chapterId={docChapter.id} onRestoreTo={handleRestore} />}
         </Drawer>
       </div>
