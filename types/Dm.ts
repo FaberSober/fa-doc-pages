@@ -1,4 +1,5 @@
 import { Fa } from '@fa/ui';
+import { Admin } from '@/types';
 
 namespace Dm {
 
@@ -16,6 +17,9 @@ namespace Dm {
     viewNum: number;
     /** 章节总访问次数 */
     viewChapterNum: number;
+    // --------------- show cols ---------------
+    userNameList: string[];
+    userList: Admin.User[];
   }
 
   /** DOC-文档用户 */

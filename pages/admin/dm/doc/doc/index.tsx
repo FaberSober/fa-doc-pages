@@ -1,8 +1,8 @@
 import React, {useContext} from 'react';
 import {BookOutlined, DownloadOutlined, EyeOutlined, SearchOutlined, UsergroupAddOutlined} from '@ant-design/icons';
-import {Button, Form, Input, Space} from 'antd';
-import {AuthDelBtn, BaseBizTable, BaseBoolSelector, BaseDrawer, BaseTableUtils, clearForm, FaberTable, FaHref, useDelete, useExport, useTableQueryParams} from '@fa/ui';
-import {docApi as api} from '@/services';
+import { Avatar, Button, Form, Input, Space, Tooltip } from 'antd';
+import {AuthDelBtn, BaseBizTable, BaseBoolSelector, BaseDrawer, BaseTableUtils, clearForm, FaberTable, FaHref, FaUtils, useDelete, useExport, useTableQueryParams} from '@fa/ui';
+import { docApi as api, fileSaveApi } from '@/services';
 import {Dm} from '@/types';
 import {MenuLayoutContext} from '@/layout';
 import DocModal from './modal/DocModal';
@@ -52,6 +52,26 @@ export default function DocList() {
     return [
       BaseTableUtils.genIdColumn('ID', 'id', 70, sorter),
       BaseTableUtils.genSimpleSorterColumn('文档名称', 'name', undefined, sorter),
+      {
+        ...BaseTableUtils.genSimpleSorterColumn('参与用户', 'userList', undefined, sorter),
+        tcConditionHide: true,
+        render: (_, r) => {
+          return (
+            r.userList.map((v, index) => (
+              <Tooltip key={v.id} title={v.name} placement="top">
+                <Avatar
+                  size="small"
+                  src={v.img ? <img src={fileSaveApi.genLocalGetFilePreview(v.img)} alt={v.name} /> : undefined}
+                  gap={0}
+                  style={{ backgroundColor: v.img ? 'transparent' : FaUtils.seqColor(index) }}
+                >
+                  {v.name.substring(0, 1)}
+                </Avatar>
+              </Tooltip>
+            ))
+          )
+        },
+      },
       {
         ...BaseTableUtils.genSimpleSorterColumn('分享码', 'shareCode', 100, sorter),
         render: (v, r) => r.isPublic ? <a target="_blank" href={`/open/dm/doc/view/${v}`}>{v}</a> : null,
