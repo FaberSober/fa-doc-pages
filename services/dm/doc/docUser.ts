@@ -14,6 +14,9 @@ class Api extends BaseApi<Dm.DocUser, number> {
   /** 批量添加用户 */
   batchAddUsers = (userIds: string[], docIds: number[]): Promise<Fa.Ret<boolean>> => this.post('batchAddUsers', { userIds, docIds });
 
+  /** 批量删除用户 */
+  batchRemoveUsers = (userIds: string[], docIds: number[]): Promise<Fa.Ret<boolean>> => this.post('batchRemoveUsers', { userIds, docIds });
+
 }
 
 export default new Api(GATE_APP.dm.doc, 'docUser');

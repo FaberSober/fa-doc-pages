@@ -46,11 +46,19 @@ export default function DocList() {
     })
   }
 
-  function handleBatchAddUser(ids: number[], users: SelectedUser[], callback: any) {
-    console.log(ids, users)
+  function handleBatchAddUsers(ids: number[], users: SelectedUser[], callback: any) {
     const userIds = users.map(i => i.id)
     docUserApi.batchAddUsers(userIds, ids).then(res => {
       FaUtils.showResponse(res, "批量添加用户")
+      callback();
+      fetchPageList()
+    })
+  }
+
+  function handleBatchRemoveUsers(ids: number[], users: SelectedUser[], callback: any) {
+    const userIds = users.map(i => i.id)
+    docUserApi.batchRemoveUsers(userIds, ids).then(res => {
+      FaUtils.showResponse(res, "批量删除用户")
       callback();
       fetchPageList()
     })
@@ -154,10 +162,12 @@ export default function DocList() {
         onRow={r => ({ onDoubleClick: () => handleOpenBookEdit(r) })}
         renderCheckBtns={rowKeys => (
           <Space>
-            <BizUserSelect onChange={(users, callback) => handleBatchAddUser(rowKeys, users, callback)}>
+            <BizUserSelect onChange={(users, callback) => handleBatchAddUsers(rowKeys, users, callback)}>
               <Button icon={<PlusOutlined />}>批量添加用户</Button>
             </BizUserSelect>
-            <Button icon={<DeleteOutlined />}>批量删除用户</Button>
+            <BizUserSelect onChange={(users, callback) => handleBatchRemoveUsers(rowKeys, users, callback)}>
+              <Button icon={<DeleteOutlined />}>批量删除用户</Button>
+            </BizUserSelect>
           </Space>
         )}
       />
