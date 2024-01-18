@@ -1,8 +1,8 @@
 import React, {useContext} from 'react';
-import {BookOutlined, DownloadOutlined, EyeOutlined, SearchOutlined, UsergroupAddOutlined} from '@ant-design/icons';
+import { BookOutlined, DeleteOutlined, DownloadOutlined, EyeOutlined, PlusOutlined, SearchOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 import { Avatar, Button, Form, Input, Space, Tooltip } from 'antd';
-import {AuthDelBtn, BaseBizTable, BaseBoolSelector, BaseDrawer, BaseTableUtils, clearForm, FaberTable, FaHref, FaUtils, useDelete, useExport, useTableQueryParams} from '@fa/ui';
-import { docApi as api, fileSaveApi } from '@/services';
+import { AuthDelBtn, BaseBizTable, BaseBoolSelector, BaseDrawer, BaseTableUtils, BizUserSelect, clearForm, FaberTable, FaHref, FaUtils, SelectedUser, useDelete, useExport, useTableQueryParams } from '@fa/ui';
+import { docApi as api, docUserApi, fileSaveApi } from '@/services';
 import {Dm} from '@/types';
 import {MenuLayoutContext} from '@/layout';
 import DocModal from './modal/DocModal';
@@ -43,6 +43,16 @@ export default function DocList() {
       name: `编辑-${r.name}`,
       type: 'inner', // iframe, inner-内部网页
       closeable: true,
+    })
+  }
+
+  function handleBatchAddUser(ids: number[], users: SelectedUser[], callback: any) {
+    console.log(ids, users)
+    const userIds = users.map(i => i.id)
+    docUserApi.batchAddUsers(userIds, ids).then(res => {
+      FaUtils.showResponse(res, "批量添加用户")
+      callback();
+      fetchPageList()
     })
   }
 
@@ -142,6 +152,14 @@ export default function DocList() {
         onSceneChange={(v) => setSceneId(v)}
         onConditionChange={(cL) => setConditionList(cL)}
         onRow={r => ({ onDoubleClick: () => handleOpenBookEdit(r) })}
+        renderCheckBtns={rowKeys => (
+          <Space>
+            <BizUserSelect onChange={(users, callback) => handleBatchAddUser(rowKeys, users, callback)}>
+              <Button icon={<PlusOutlined />}>批量添加用户</Button>
+            </BizUserSelect>
+            <Button icon={<DeleteOutlined />}>批量删除用户</Button>
+          </Space>
+        )}
       />
     </div>
   );
