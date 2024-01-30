@@ -4,6 +4,7 @@ import { Dm } from "@/types";
 import { docApi, docChapterApi, docChapterDetailApi } from "@/services";
 import { Empty, FloatButton, Switch } from "antd";
 import { Allotment } from "allotment";
+import 'allotment/dist/style.css';
 import { Helmet } from 'react-helmet-async';
 import { ApiEffectLayoutContext, BaseTree, FaFlexRestLayout, FaUtils, PageLoading, ThemeLayoutContext, useQs } from "@fa/ui";
 import { DocLayout } from "@features/fa-doc-pages/layout";

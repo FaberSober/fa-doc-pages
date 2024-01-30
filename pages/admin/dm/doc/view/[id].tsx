@@ -4,6 +4,7 @@ import {Dm} from "@features/fa-doc-pages/types";
 import {docApi, docChapterApi, docChapterDetailApi} from "@features/fa-doc-pages/services";
 import {Empty, FloatButton, Tag} from "antd";
 import {Allotment} from "allotment";
+import 'allotment/dist/style.css';
 import {ApiEffectLayoutContext, BaseTree, FaFlexRestLayout, FaUtils, PageLoading} from "@fa/ui";
 import {DocLayout} from "@features/fa-doc-pages/layout";
 import { FaRichHtmlImgPreview, FaToc } from '@/components'

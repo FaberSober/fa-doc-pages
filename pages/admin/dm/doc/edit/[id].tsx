@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { Drawer, Empty, Spin } from "antd";
 import { Allotment } from "allotment";
+import 'allotment/dist/style.css';
 import { ApiEffectLayoutContext, BaseTinyMCE, BaseTree, FaFlexRestLayout, PageLoading, ThemeLayoutContext } from "@fa/ui";
 import { Dm } from "@/types";
 import { docApi, docChapterApi, docChapterDetailApi } from "@/services";
