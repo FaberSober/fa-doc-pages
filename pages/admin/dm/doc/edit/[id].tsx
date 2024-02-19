@@ -150,7 +150,7 @@ export default function index() {
                     <BaseTinyMCE
                       ref={ref}
                       style={{width: '100%', height: '100%'}}
-                      initialValue={docChapterDetail.content} // 第一次加载组件成功后的初始化值
+                      value={docChapterDetail.content} // 第一次加载组件成功后的初始化值
                       onChange={handleContentChange}
                       onSave={handleSave}
                       editorInit={{

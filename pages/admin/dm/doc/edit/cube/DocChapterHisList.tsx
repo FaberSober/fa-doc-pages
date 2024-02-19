@@ -112,7 +112,7 @@ export default function DocChapterHisList({chapterId, onRestoreTo}: DocChapterHi
         onConditionChange={(cL) => setConditionList(cL)}
       />
 
-      <Drawer title="查看历史版本" open={open} onClose={hide} bodyStyle={{position: 'relative'}} width={1035}>
+      <Drawer title="查看历史版本" open={open} onClose={hide} styles={{ body: {position: 'relative'} }} width={1035}>
         <div className="fa-full-content fa-p12 fa-flex-column">
           <Space className="fa-mb12">
             <Button onClick={handleRestore}>恢复到此版本</Button>
