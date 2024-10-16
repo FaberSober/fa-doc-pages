@@ -113,7 +113,7 @@ export default function DocList() {
             <AuthDelBtn handleDelete={() => handleDelete(r.id)}/>
           </Space>
         ),
-        width: 270,
+        width: 280,
         fixed: 'right',
         tcRequired: true,
         tcType: 'menu',
