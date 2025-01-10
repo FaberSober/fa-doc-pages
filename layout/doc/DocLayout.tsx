@@ -1,6 +1,6 @@
 import React, {createContext} from 'react';
-import {Dm} from '@/types';
-import {Fa} from "@fa/ui";
+import type {Dm} from '@/types';
+import type {Fa} from "@fa/ui";
 
 
 export interface DocLayoutContextProps {

@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
 import {EyeOutlined, ReloadOutlined} from '@ant-design/icons';
 import {Button, Drawer, Form, Input, Space} from 'antd';
-import {AuthDelBtn, BaseBizTable, BaseTableUtils, FaberTable, FaFlexRestLayout, FaHref, FaUtils, useDelete, useTableQueryParams, useViewItem} from '@fa/ui';
+import {AuthDelBtn, BaseBizTable, BaseTableUtils, type FaberTable, FaFlexRestLayout, FaHref, FaUtils, useDelete, useTableQueryParams, useViewItem} from '@fa/ui';
 import {docChapterHisApi, docChapterHisApi as api, docChapterHisDetailApi} from '@/services';
-import {Dm} from '@/types';
+import type {Dm} from '@/types';
 import {FaToc} from "@features/fa-admin-pages/components";
 
 const serviceName = '历史版本';

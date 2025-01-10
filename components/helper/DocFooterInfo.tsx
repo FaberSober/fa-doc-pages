@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dm} from "@/types";
+import type {Dm} from "@/types";
 import {isNil} from "lodash";
 
 

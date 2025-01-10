@@ -1,6 +1,6 @@
 import {GATE_APP} from '@/configs';
-import {BaseApi, Fa} from '@fa/ui';
-import {Dm} from '@/types';
+import {BaseApi, type Fa} from '@fa/ui';
+import type {Dm} from '@/types';
 
 /** ------------------------------------------ xx 操作接口 ------------------------------------------ */
 class Api extends BaseApi<Dm.DocUser, number> {

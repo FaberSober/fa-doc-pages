@@ -4,7 +4,7 @@ import { Drawer, Empty, Spin } from "antd";
 import { Allotment } from "allotment";
 import 'allotment/dist/style.css';
 import { ApiEffectLayoutContext, BaseTinyMCE, BaseTree, FaFlexRestLayout, PageLoading, ThemeLayoutContext } from "@fa/ui";
-import { Dm } from "@/types";
+import type { Dm } from "@/types";
 import { docApi, docChapterApi, docChapterDetailApi } from "@/services";
 import { DocLayout } from "@features/fa-doc-pages/layout";
 import { isNil } from "lodash";
@@ -144,39 +144,37 @@ export default function index() {
           {/* 右侧编辑面板 */}
           <div className="fa-flex-column fa-full fa-p12 fa-flex-column">
             {docChapterDetail && (
-              <>
-                <FaFlexRestLayout>
-                  {docChapterDetail && !fetching && (
-                    <BaseTinyMCE
-                      ref={ref}
-                      style={{width: '100%', height: '100%'}}
-                      value={docChapterDetail.content} // 第一次加载组件成功后的初始化值
-                      onChange={handleContentChange}
-                      onSave={handleSave}
-                      editorInit={{
-                        toolbar: 'save blocks fontsize fontfamily bold italic underline blockquote lineheight alignleft aligncenter alignright alignjustify anchor forecolor bullist numlist table link image media charmap emoticons codesample code fullscreen insertdatetime faHis help',
-                        content_style,
-                        setup: (editor: any) => {
-                          // console.log('setup', editor)
-                          /* 历史版本 */
-                          editor.ui.registry.addButton('faHis', {
-                            text: '历史版本',
-                            tooltip: '插入当前时间',
-                            onAction: function () {
-                              setHisOpen(true)
-                            }
-                          });
-                        },
-                        // video_template_callback: (data:any) =>
-                        //   `<video width="${data.width}" height="${data.height}"${data.poster ? ` poster="${data.poster}"` : ''} controls="controls">\n` +
-                        //   `<source src="${data.source}"${data.sourcemime ? ` type="${data.sourcemime}"` : ''} />\n` +
-                        //   (data.altsource ? `<source src="${data.altsource}"${data.altsourcemime ? ` type="${data.altsourcemime}"` : ''} />\n` : '') +
-                        //   '</video>'
-                      }}
-                    />
-                  )}
-                </FaFlexRestLayout>
-              </>
+              <FaFlexRestLayout>
+                {docChapterDetail && !fetching && (
+                  <BaseTinyMCE
+                    ref={ref}
+                    style={{width: '100%', height: '100%'}}
+                    value={docChapterDetail.content} // 第一次加载组件成功后的初始化值
+                    onChange={handleContentChange}
+                    onSave={handleSave}
+                    editorInit={{
+                      toolbar: 'save blocks fontsize fontfamily bold italic underline blockquote lineheight alignleft aligncenter alignright alignjustify anchor forecolor bullist numlist table link image media charmap emoticons codesample code fullscreen insertdatetime faHis help',
+                      content_style,
+                      setup: (editor: any) => {
+                        // console.log('setup', editor)
+                        /* 历史版本 */
+                        editor.ui.registry.addButton('faHis', {
+                          text: '历史版本',
+                          tooltip: '插入当前时间',
+                          onAction: () => {
+                            setHisOpen(true)
+                          }
+                        });
+                      },
+                      // video_template_callback: (data:any) =>
+                      //   `<video width="${data.width}" height="${data.height}"${data.poster ? ` poster="${data.poster}"` : ''} controls="controls">\n` +
+                      //   `<source src="${data.source}"${data.sourcemime ? ` type="${data.sourcemime}"` : ''} />\n` +
+                      //   (data.altsource ? `<source src="${data.altsource}"${data.altsourcemime ? ` type="${data.altsourcemime}"` : ''} />\n` : '') +
+                      //   '</video>'
+                    }}
+                  />
+                )}
+              </FaFlexRestLayout>
             )}
 
             {isNil(docChapterDetail) && <Empty description="请选择右侧章节进行编辑"/>}

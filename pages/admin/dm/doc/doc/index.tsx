@@ -1,9 +1,9 @@
 import React, {useContext} from 'react';
 import { BookOutlined, DeleteOutlined, DownloadOutlined, EyeOutlined, PlusOutlined, SearchOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 import { Avatar, Button, Form, Input, Space, Tooltip } from 'antd';
-import { AuthDelBtn, BaseBizTable, BaseBoolSelector, BaseDrawer, BaseTableUtils, BizUserSelect, clearForm, FaberTable, FaHref, FaUtils, SelectedUser, useDelete, useExport, useTableQueryParams } from '@fa/ui';
+import { AuthDelBtn, BaseBizTable, BaseBoolSelector, BaseDrawer, BaseTableUtils, BizUserSelect, clearForm, type FaberTable, FaHref, FaUtils, type SelectedUser, useDelete, useExport, useTableQueryParams } from '@fa/ui';
 import { docApi as api, docUserApi, fileSaveApi } from '@/services';
-import {Dm} from '@/types';
+import type {Dm} from '@/types';
 import {MenuLayoutContext} from '@/layout';
 import DocModal from './modal/DocModal';
 import DocUserList from "./cube/DocUserList";
@@ -92,7 +92,7 @@ export default function DocList() {
       },
       {
         ...BaseTableUtils.genSimpleSorterColumn('分享码', 'shareCode', 100, sorter),
-        render: (v, r) => r.isPublic ? <a target="_blank" href={`/open/dm/doc/view/${v}`}>{v}</a> : null,
+        render: (v, r) => r.isPublic ? <a target="_blank" href={`/open/dm/doc/view/${v}`} rel="noreferrer">{v}</a> : null,
       },
       BaseTableUtils.genSimpleSorterColumn('访问次数', 'viewNum', 100, sorter),
       BaseTableUtils.genSimpleSorterColumn('章节访问次数', 'viewChapterNum', 120, sorter),

@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
-import {Dm} from "@features/fa-doc-pages/types";
+import type {Dm} from "@features/fa-doc-pages/types";
 import {docApi, docChapterApi, docChapterDetailApi} from "@features/fa-doc-pages/services";
 import { Button, Drawer, Empty, FloatButton, Switch } from "antd";
 import {Helmet} from 'react-helmet-async';

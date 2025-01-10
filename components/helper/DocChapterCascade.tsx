@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
-import { BaseCascader, BaseCascaderProps } from '@fa/ui';
+import { BaseCascader, type BaseCascaderProps } from '@fa/ui';
 import { docChapterApi as api } from '@/services';
-import { Dm } from '@/types';
+import type { Dm } from '@/types';
 import {DocLayoutContext} from "@features/fa-doc-pages/layout/doc/DocLayout";
 
 export interface DocChapterCascadeProps extends Omit<BaseCascaderProps<Dm.DocChapter>, 'serviceApi'> {}

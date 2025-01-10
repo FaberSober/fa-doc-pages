@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { get } from 'lodash';
 import { Form, Input } from 'antd';
-import { ApiEffectLayoutContext, DragModal, DragModalProps, FaUtils } from '@fa/ui';
+import { ApiEffectLayoutContext, DragModal, type DragModalProps, FaUtils } from '@fa/ui';
 import { docChapterApi as api } from '@/services';
-import { Admin } from '@/types';
+import type { Admin } from '@/types';
 import {DocChapterCascade} from "@features/fa-doc-pages/components";
 import {DocLayoutContext} from "@features/fa-doc-pages/layout/doc/DocLayout";
 

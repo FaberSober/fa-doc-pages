@@ -1,7 +1,7 @@
 import { GATE_APP } from '@/configs';
 import { BaseTreeApi } from '@fa/ui';
-import { Dm } from '@/types';
-import {Fa} from "@fa/ui/src";
+import type { Dm } from '@/types';
+import type {Fa} from "@fa/ui/src";
 
 /** ------------------------------------------ xx 操作接口 ------------------------------------------ */
 class Api extends BaseTreeApi<Dm.DocChapter, number> {

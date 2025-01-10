@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
-import { Dm } from "@/types";
+import type { Dm } from "@/types";
 import { docApi, docChapterApi, docChapterDetailApi } from "@/services";
 import { Empty, FloatButton, Switch } from "antd";
 import { Allotment } from "allotment";

@@ -1,5 +1,5 @@
-import { Fa } from '@fa/ui';
-import { Admin } from '@/types';
+import type { Fa } from '@fa/ui';
+import type { Admin } from '@/types';
 
 namespace Dm {
 

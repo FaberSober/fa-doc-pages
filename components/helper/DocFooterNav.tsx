@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Fa } from '@fa/ui'
+import type { Fa } from '@fa/ui'
 import { docChapterApi } from "@/services";
-import { Dm } from "@/types";
+import type { Dm } from "@/types";
 import { findIndex } from "lodash";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
