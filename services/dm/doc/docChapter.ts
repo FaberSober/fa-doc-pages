@@ -6,13 +6,13 @@ import type { Dm } from '@/types';
 class Api extends BaseTreeApi<Dm.DocChapter, number> {
 
   /** 获取所有实体列表Tree */
-  outGetTree = (params: Fa.BaseQueryParams = {}): Promise<Fa.Ret<Fa.TreeNode<Dm.DocChapter, number>[]>> => this.post(`outGetTree`, params);
+  outGetTree = (shareCode: string, params: Fa.BaseQueryParams = {}): Promise<Fa.Ret<Fa.TreeNode<Dm.DocChapter, number>[]>> => this.post(`outGetTree/${shareCode}`, params);
 
   /** id查询 */
-  outGetById = (id: number): Promise<Fa.Ret<Dm.DocChapter>> => this.get(`outGetById/${id}`);
+  outGetById = (shareCode: string, id: number): Promise<Fa.Ret<Dm.DocChapter>> => this.get(`outGetById/${shareCode}/${id}`);
 
   /** 分页获取 */
-  outPage = (params: Fa.BasePageProps): Promise<Fa.Ret<Fa.Page<Dm.DocChapter>>> => this.post('outPage', params);
+  outPage = (shareCode: string, params: Fa.BasePageProps): Promise<Fa.Ret<Fa.Page<Dm.DocChapter>>> => this.post(`outPage/${shareCode}`, params);
 
 }
 

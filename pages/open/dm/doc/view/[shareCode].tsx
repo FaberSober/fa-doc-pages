@@ -47,7 +47,7 @@ export default function index() {
       setDoc(res.data)
 
       if (search && search.chapter && !Number.isNaN(search.chapter)) {
-        docChapterApi.outGetById(Number(search.chapter)).then(res => {
+        docChapterApi.outGetById(shareCode!, Number(search.chapter)).then(res => {
           setDocChapter(res.data)
           getDocChapterDetail(res.data.id)
           // 初始打开，展开对应的Tree节点
@@ -58,7 +58,7 @@ export default function index() {
           }, 300)
         })
       } else {
-        docChapterApi.outPage({ pageSize: 1, query: { docId: res.data.id, parentId: 0 }, sorter: 'sort ASC' }).then(res1 => {
+        docChapterApi.outPage(shareCode!, { pageSize: 1, query: { parentId: 0 }, sorter: 'sort ASC' }).then(res1 => {
           if (res1.data && res1.data.rows && res1.data.rows[0]) {
             setDocChapter(res1.data.rows[0])
             getDocChapterDetail(res1.data.rows[0].id)
@@ -89,7 +89,7 @@ export default function index() {
 
   // 查询章节详情
   function getDocChapterDetail(chapterId: number) {
-    docChapterDetailApi.outGetById(chapterId).then(res => {
+    docChapterDetailApi.outGetById(shareCode!, chapterId).then(res => {
       FaUtils.scrollToTop(document.getElementById('fa-doc-div')!)
       setDocChapterDetail(res.data)
       // 代码高亮
@@ -138,7 +138,7 @@ export default function index() {
                     serviceName="章节"
                     serviceApi={{
                       ...docChapterApi,
-                      allTree: () => docChapterApi.outGetTree({ query: { docId: doc.id } })
+                      allTree: () => docChapterApi.outGetTree(shareCode!)
                     }}
                     selectedKeys={docChapter ? [docChapter.id] : []}
                     draggable={false}
@@ -160,7 +160,7 @@ export default function index() {
 
                 <div style={{ width: 800, marginRight: 200 }}>
                   <DocFooterNav
-                    docId={doc.id}
+                    shareCode={shareCode}
                     docChapterId={docChapter?.id}
                     onClickItem={handleClickDocChapter}
                   />
@@ -171,7 +171,7 @@ export default function index() {
                 <div style={{ width: 800, marginRight: 200 }}>
                   <DocFooterInfo docChapterDetail={docChapterDetail} />
                   <DocFooterNav
-                    docId={doc.id}
+                    shareCode={shareCode}
                     docChapterId={docChapter?.id}
                     onClickItem={handleClickDocChapter}
                   />

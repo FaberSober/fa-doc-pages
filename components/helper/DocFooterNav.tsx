@@ -20,7 +20,8 @@ function flatTreeList(tree: Fa.TreeNode<Dm.DocChapter>[] = []): Dm.DocChapter[] 
 }
 
 export interface DocFooterNavProps {
-  docId: number;
+  docId?: number;
+  shareCode?: string;
   docChapterId?: number;
   onClickItem?: (v: Dm.DocChapter) => void;
 }
@@ -29,17 +30,24 @@ export interface DocFooterNavProps {
  * @author xu.pengfei
  * @date 2023/7/15 21:28
  */
-export default function DocFooterNav({ docId, docChapterId, onClickItem }: DocFooterNavProps) {
+export default function DocFooterNav({ docId, shareCode, docChapterId, onClickItem }: DocFooterNavProps) {
 
   // const [tree, setTree] = useState<Fa.TreeNode<Dm.DocChapter>[]>([])
   const [array, setArray] = useState<Dm.DocChapter[]>([])
 
   useEffect(() => {
-    docChapterApi.outGetTree({ query: { docId }}).then(res => {
+    if (shareCode) {
+      docChapterApi.outGetTree(shareCode).then(res => {
+        setArray(flatTreeList(res.data))
+      })
+      return
+    }
+    if (docId === undefined) return
+    docChapterApi.getTree({ query: { docId }}).then(res => {
       // setTree(tree)
       setArray(flatTreeList(res.data))
     })
-  }, [docId])
+  }, [docId, shareCode])
 
   function handleClick(index: number) {
     const item = array[index];

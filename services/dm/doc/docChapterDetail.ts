@@ -9,7 +9,7 @@ class Api extends BaseApi<Dm.DocChapterDetail, number> {
   getOrCreateById = (id: number): Promise<Fa.Ret<Dm.DocChapterDetail>> => this.post('getOrCreateById', { id });
 
   /** id查询 */
-  outGetById = (id: number): Promise<Fa.Ret<Dm.DocChapterDetail>> => this.get(`outGetById/${id}`);
+  outGetById = (shareCode: string, id: number): Promise<Fa.Ret<Dm.DocChapterDetail>> => this.get(`outGetById/${shareCode}/${id}`);
 
 }
 
