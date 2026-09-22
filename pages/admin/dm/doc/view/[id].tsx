@@ -2,9 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import type {Dm} from "@features/fa-doc-pages/types";
 import {docApi, docChapterApi, docChapterDetailApi} from "@features/fa-doc-pages/services";
-import {Empty, FloatButton, Tag} from "antd";
-import {Allotment} from "allotment";
-import 'allotment/dist/style.css';
+import {Empty, FloatButton, Splitter, Tag} from "antd";
 import {ApiEffectLayoutContext, BaseTree, FaFlexRestLayout, FaUtils, PageLoading} from "@fa/ui";
 import {DocLayout} from "@features/fa-doc-pages/layout";
 import { FaRichHtmlImgPreview, FaToc } from '@/components'
@@ -73,9 +71,9 @@ export default function index() {
         </div>
 
         <FaFlexRestLayout>
-          <Allotment defaultSizes={[100, 500]}>
+          <Splitter>
             {/* 左侧面板 */}
-            <Allotment.Pane minSize={200} maxSize={400}>
+            <Splitter.Panel defaultSize={200} min={200} max={400}>
               <div className="fa-full fa-flex-column">
                 <div className="fa-p12 fa-border-b">目录</div>
                 <FaFlexRestLayout>
@@ -101,10 +99,11 @@ export default function index() {
                   <div>创建时间：{doc.crtTime}</div>
                 </div>
               </div>
-            </Allotment.Pane>
+            </Splitter.Panel>
 
             {/* 右侧编辑面板 */}
-            <div className="fa-flex-row fa-full fa-relative">
+            <Splitter.Panel>
+              <div className="fa-flex-row fa-full fa-relative">
               <div id='fa-doc-div' className="fa-full-content fa-scroll-auto-y fa-flex-column-center">
                 <h1 style={{marginRight: 200}}>{docChapter?.name}</h1>
 
@@ -135,8 +134,9 @@ export default function index() {
               <div style={{position: 'fixed', top: 126, right: 10, width: 200, bottom: 12}}>
                 {docChapterDetail && <FaToc parentDomId="fa-doc-div" domId={`fa-doc-main-${docChapterDetail.id}`} />}
               </div>
-            </div>
-          </Allotment>
+              </div>
+            </Splitter.Panel>
+          </Splitter>
         </FaFlexRestLayout>
       </div>
     </DocLayout>

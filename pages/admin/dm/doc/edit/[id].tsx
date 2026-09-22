@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useParams } from "react-router-dom";
-import { Drawer, Empty, Spin } from "antd";
-import { Allotment } from "allotment";
-import 'allotment/dist/style.css';
+import { Drawer, Empty, Spin, Splitter } from "antd";
 import { ApiEffectLayoutContext, BaseTinyMCE, BaseTree, FaFlexRestLayout, PageLoading, ThemeLayoutContext } from "@fa/ui";
 import type { Dm } from "@/types";
 import { docApi, docChapterApi, docChapterDetailApi } from "@/services";
@@ -119,9 +117,9 @@ export default function index() {
   return (
     <DocLayout doc={doc}>
       <div className="fa-full-content">
-        <Allotment defaultSizes={[100, 500]}>
+        <Splitter>
           {/* 左侧面板 */}
-          <Allotment.Pane minSize={200} maxSize={400}>
+          <Splitter.Panel defaultSize={200} min={200} max={400}>
             <BaseTree
               // showRoot
               rootName="全部"
@@ -139,10 +137,11 @@ export default function index() {
               showTips
               extraEffectArgs={[id]}
             />
-          </Allotment.Pane>
+          </Splitter.Panel>
 
           {/* 右侧编辑面板 */}
-          <div className="fa-flex-column fa-full fa-p12 fa-flex-column">
+          <Splitter.Panel>
+            <div className="fa-flex-column fa-full fa-p12 fa-flex-column">
             {docChapterDetail && (
               <FaFlexRestLayout>
                 {docChapterDetail && !fetching && (
@@ -178,8 +177,9 @@ export default function index() {
             )}
 
             {isNil(docChapterDetail) && <Empty description="请选择右侧章节进行编辑"/>}
-          </div>
-        </Allotment>
+            </div>
+          </Splitter.Panel>
+        </Splitter>
 
         {fetching && <div className="fa-full-content fa-flex-center" style={{ zIndex: 9999, cursor: 'wait', background: 'EEEEEE4C' }}><Spin size="large"/></div>}
 
