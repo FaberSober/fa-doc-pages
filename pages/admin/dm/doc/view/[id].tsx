@@ -1,9 +1,9 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import type {Dm} from "@features/fa-doc-pages/types";
 import {docApi, docChapterApi, docChapterDetailApi} from "@features/fa-doc-pages/services";
 import {Empty, FloatButton, Splitter, Tag} from "antd";
-import {ApiEffectLayoutContext, BaseTree, FaFlexRestLayout, FaUtils, PageLoading} from "@fa/ui";
+import {BaseTree, FaFlexRestLayout, FaUtils, PageLoading, useApiLoading} from "@fa/ui";
 import {DocLayout} from "@features/fa-doc-pages/layout";
 import { FaRichHtmlImgPreview, FaToc } from '@/components'
 import DocFooterNav from "@features/fa-doc-pages/components/helper/DocFooterNav";
@@ -18,24 +18,29 @@ import '@features/fa-doc-pages/components/style/docview.scss'
  */
 export default function index() {
   const {id} = useParams()
-  const {loadingEffect} = useContext(ApiEffectLayoutContext)
 
   const [doc, setDoc] = useState<Dm.Doc>()
+  const [docChapter, setDocChapter] = useState<Dm.DocChapter>();
+  const [docChapterDetail, setDocChapterDetail] = useState<Dm.DocChapterDetail>();
+
+  const loading = useApiLoading(docApi.getUrl(`getMineById/${id}`))
 
   useEffect(() => {
+    setDoc(undefined)
+    setDocChapter(undefined)
+    setDocChapterDetail(undefined)
+
     docApi.getMineById(Number(id)).then(res => {
       setDoc(res.data)
 
-      docChapterApi.page({ pageSize: 1, query: { docId: res.data.id, parentId: 0 } }).then(res1 => {
+      // 首章按章节 sort 升序打开，与公开页/H5 保持一致
+      docChapterApi.page({ pageSize: 1, query: { docId: res.data.id, parentId: 0 }, sorter: 'sort ASC' }).then(res1 => {
         if (res1.data && res1.data.rows && res1.data.rows[0]) {
           handleClickDocChapter(res1.data.rows[0])
         }
       })
     })
-  }, [])
-
-  const [docChapter, setDocChapter] = useState<Dm.DocChapter>();
-  const [docChapterDetail, setDocChapterDetail] = useState<Dm.DocChapterDetail>();
+  }, [id])
 
   function onTreeSelect(keys: any[], event: any) {
     if (keys.length === 0) return;
@@ -57,10 +62,9 @@ export default function index() {
     })
   }
 
-  const loading = loadingEffect[docApi.getUrl(`getById/${id}`)]
   if (loading) return <PageLoading />
 
-  if (doc === undefined) return <Empty description="文档不存在"/>
+  if (doc === undefined) return <Empty description="文档不存在或无访问权限"/>
 
   return (
     <DocLayout doc={doc}>
@@ -91,6 +95,7 @@ export default function index() {
                     }}
                     selectedKeys={docChapter ? [docChapter.id] : []}
                     draggable={false}
+                    extraEffectArgs={[id]}
                   />
                 </FaFlexRestLayout>
 
@@ -115,7 +120,7 @@ export default function index() {
                   />
                 </div>
 
-                {docChapterDetail && <div className="line-numbers" id={`fa-doc-main-${docChapterDetail.id}`} style={{ width: 800, marginRight: 200 }} dangerouslySetInnerHTML={{__html: docChapterDetail.content}} />}
+                {docChapterDetail && <div className="line-numbers" id={`fa-doc-main-${docChapterDetail.id}`} style={{width: 800, marginRight: 200}} dangerouslySetInnerHTML={{__html: docChapterDetail.content}} />}
 
                 <div style={{ minWidth: 700, maxWidth: 1100, marginRight: 200 }}>
                   <DocFooterNav

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useParams } from "react-router-dom";
 import { Drawer, Empty, Spin, Splitter } from "antd";
-import { ApiEffectLayoutContext, BaseTinyMCE, BaseTree, FaFlexRestLayout, PageLoading, ThemeLayoutContext } from "@fa/ui";
+import { BaseTinyMCE, BaseTree, FaFlexRestLayout, PageLoading, ThemeLayoutContext, useApiLoading } from "@fa/ui";
 import type { Dm } from "@/types";
 import { docApi, docChapterApi, docChapterDetailApi } from "@/services";
 import { DocLayout } from "@features/fa-doc-pages/layout";
@@ -9,9 +9,6 @@ import { isNil } from "lodash";
 import DocChapterModal from "./modal/DocChapterModal";
 import DocChapterHisList from "./cube/DocChapterHisList";
 
-
-let hasChange = false; // 是否有内容更新，关闭浏览器之前做提醒判断
-let staticDocChapterDetail: Dm.DocChapterDetail|undefined;
 
 /**
  * 文档编辑
@@ -21,51 +18,62 @@ let staticDocChapterDetail: Dm.DocChapterDetail|undefined;
 export default function index() {
   const {id} = useParams()
   const {themeDark} = useContext(ThemeLayoutContext)
-  const {loadingEffect} = useContext(ApiEffectLayoutContext)
   const ref = useRef<any>()
+
+  const hasChangeRef = useRef(false) // 是否有内容更新，关闭浏览器之前做提醒判断
+  const saveBaselineRef = useRef<Dm.DocChapterDetail|undefined>(undefined) // 当前章节的保存基线
 
   const [doc, setDoc] = useState<Dm.Doc>()
   const [hisOpen, setHisOpen] = useState(false) // 历史版本Drawer open state
   const [docChapter, setDocChapter] = useState<Dm.DocChapter>();
   const [docChapterDetail, setDocChapterDetail] = useState<Dm.DocChapterDetail>();
 
+  const loading = useApiLoading(docApi.getUrl(`getMineById/${id}`))
+  const fetching = useApiLoading(docChapterDetailApi.getUrl('getOrCreateById'))
+
   useEffect(() => {
     docApi.getMineById(Number(id)).then(res => {
       setDoc(res.data)
       setDocChapter(undefined)
       setDocChapterDetail(undefined)
+      saveBaselineRef.current = undefined
+      hasChangeRef.current = false
     })
   }, [id])
 
   useEffect(() => {
-    window.onbeforeunload = () => {
-      // console.log('hasChange', hasChange)
-      // For Safari
-      return hasChange ? 'Sure?' : undefined;
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (!hasChangeRef.current) return undefined;
+      e.preventDefault(); // For Safari
+      e.returnValue = 'Sure?';
+      return 'Sure?';
     };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [])
 
-  function onTreeSelect(keys: any[], event: any) {
+  async function onTreeSelect(keys: any[], event: any) {
     if (keys.length === 0) return;
 
-    // 保存现有的章节内容
-    handleSave();
+    // 切换章节之前，先等待当前章节内容保存完成
+    await handleSave();
     setHtml('')
 
     const data: Dm.DocChapter = event.node.sourceData
     setDocChapter(data);
     // 查询章节详情
-    docChapterDetailApi.getOrCreateById(data.id).then(res => {
-      setDocChapterDetail({ ...res.data })
-      staticDocChapterDetail = { ...res.data }
-      setHtml(res.data.content)
-    })
+    const res = await docChapterDetailApi.getOrCreateById(data.id)
+    const detail = { ...res.data }
+    setDocChapterDetail(detail)
+    saveBaselineRef.current = { ...detail }
+    setHtml(res.data.content)
   }
 
   function onAfterDelItem() {
     setDocChapter(undefined);
     setDocChapterDetail(undefined)
-    staticDocChapterDetail = undefined
+    saveBaselineRef.current = undefined
+    hasChangeRef.current = false
   }
 
   function setHtml(html: string) {
@@ -73,38 +81,40 @@ export default function index() {
   }
 
   function handleContentChange(v: any) {
-    // console.log('handleContentChange', v, docChapterDetail, 'staticDocChapterDetail', staticDocChapterDetail)
-    hasChange = true
+    hasChangeRef.current = true
     if (docChapterDetail) {
       docChapterDetail.content = v
     }
   }
 
   function handleSave() {
-    if (staticDocChapterDetail === undefined) return;
-    if (isNil(ref.current)) return;
+    const baseline = saveBaselineRef.current
+    if (baseline === undefined) return Promise.resolve();
+    if (isNil(ref.current)) return Promise.resolve();
 
     const content = ref.current.getContent();
-    if (content === staticDocChapterDetail.content) {
-      // console.log('content no change')
-      return;
+    if (content === baseline.content) {
+      return Promise.resolve();
     }
-    docChapterDetailApi.update(staticDocChapterDetail.id, {content}).then(_res => {
-      hasChange = false
-    })
+
+    return docChapterDetailApi.update(baseline.id, {content}).then(_res => {
+      // 保存成功后更新基线，避免下次切换章节重复提交
+      baseline.content = content
+      hasChangeRef.current = false
+    }).catch(() => {
+      // 保存失败时保留未保存状态，请求层已弹出错误反馈
+      hasChangeRef.current = true
+    });
   }
 
   function handleRestore(his:Dm.DocChapterHisDetail) {
     ref.current?.setContent(his.content)
     setHisOpen(false)
-    handleSave()
+    void handleSave()
   }
 
-  const loading = loadingEffect[docApi.getUrl(`getById/${id}`)]
   if (loading) return <PageLoading />
-  if (doc === undefined) return <Empty description="文档不存在"/>
-
-  const fetching = loadingEffect[docChapterDetailApi.getUrl('getOrCreateById')]
+  if (doc === undefined) return <Empty description="文档不存在或无访问权限"/>
 
   const htmlBgColor = themeDark ? '#222f3e' : '#F1F1F1';
   const bodyBgColor = themeDark ? '#08202f' : '#FFFFFF';

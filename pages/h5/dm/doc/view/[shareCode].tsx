@@ -4,7 +4,7 @@ import type {Dm} from "@features/fa-doc-pages/types";
 import {docApi, docChapterApi, docChapterDetailApi} from "@features/fa-doc-pages/services";
 import { Button, Drawer, Empty, FloatButton, Switch } from "antd";
 import {Helmet} from 'react-helmet-async';
-import { ApiEffectLayoutContext, BaseTree, FaUtils, PageLoading, ThemeLayoutContext, useQs } from "@fa/ui";
+import { BaseTree, FaUtils, PageLoading, ThemeLayoutContext, useApiLoading, useQs } from "@fa/ui";
 import {DocLayout} from "@features/fa-doc-pages/layout";
 import {ConfigLayoutContext} from "@features/fa-admin-pages/layout";
 import {isNil} from "lodash";
@@ -29,12 +29,15 @@ export default function index() {
   const search = useQs();
 
   const navigate = useNavigate();
-  const {loadingEffect} = useContext(ApiEffectLayoutContext)
   const {systemConfig} = useContext(ConfigLayoutContext)
 
   const [doc, setDoc] = useState<Dm.Doc>()
   const [chapterOpen, setChapterOpen] = useState(false)
   const [tocOpen, setTocOpen] = useState(false)
+  const [docChapter, setDocChapter] = useState<Dm.DocChapter>();
+  const [docChapterDetail, setDocChapterDetail] = useState<Dm.DocChapterDetail>();
+
+  const loading = useApiLoading(docApi.getUrl(`outGetByShareCode/${shareCode}`))
 
   useEffect(() => {
     if (!isMobile) {
@@ -45,6 +48,10 @@ export default function index() {
       navigate(url)
       return;
     }
+
+    setDoc(undefined)
+    setDocChapter(undefined)
+    setDocChapterDetail(undefined)
 
     docApi.outGetByShareCode(shareCode!).then(res => {
       setDoc(res.data)
@@ -63,10 +70,7 @@ export default function index() {
         })
       }
     })
-  }, [])
-
-  const [docChapter, setDocChapter] = useState<Dm.DocChapter>();
-  const [docChapterDetail, setDocChapterDetail] = useState<Dm.DocChapterDetail>();
+  }, [shareCode])
 
   function onTreeSelect(keys: any[], event: any) {
     if (keys.length === 0) return;
@@ -96,7 +100,6 @@ export default function index() {
     })
   }
 
-  const loading = loadingEffect[docApi.getUrl(`outGetByShareCode/${shareCode}`)]
   if (loading) return <PageLoading/>
   if (isNil(systemConfig)) return <PageLoading/>
 
@@ -171,6 +174,7 @@ export default function index() {
           }}
           selectedKeys={docChapter ? [docChapter.id] : []}
           draggable={false}
+          extraEffectArgs={[shareCode]}
         />
       </Drawer>
 

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { get } from 'lodash';
 import { Form, Input } from 'antd';
-import { ApiEffectLayoutContext, DragModal, type DragModalProps, FaUtils } from '@fa/ui';
+import { DragModal, type DragModalProps, FaUtils, useApiLoading } from '@fa/ui';
 import { docChapterApi as api } from '@/services';
 import type { Admin } from '@/types';
 import {DocChapterCascade} from "@features/fa-doc-pages/components";
@@ -14,13 +14,13 @@ interface IProps extends DragModalProps {
   parentId?: number;
   title?: string;
   record?: Admin.Dict;
+  fetchFinish?: (r?: any) => void;
 }
 
 /**
  * Tree数据新增、编辑弹框
  */
 export default function DocChapterModal({ children, parentId, title, record, ...props }: IProps) {
-  const { loadingEffect } = useContext(ApiEffectLayoutContext);
   const [form] = Form.useForm();
 
   const {doc} = useContext(DocLayoutContext)
@@ -31,7 +31,9 @@ export default function DocChapterModal({ children, parentId, title, record, ...
     api.save(params).then((res) => {
       FaUtils.showResponse(res, `新增${serviceName}`);
       setOpen(false);
-      if (props.onCancel) props.onCancel(params);
+      // 保存成功后刷新章节树
+      if (props.fetchFinish) props.fetchFinish(params);
+      else if (props.onCancel) props.onCancel(params as any);
     });
   }
 
@@ -40,7 +42,9 @@ export default function DocChapterModal({ children, parentId, title, record, ...
     api.update(params.id, params).then((res) => {
       FaUtils.showResponse(res, `更新${serviceName}`);
       setOpen(false);
-      if (props.onCancel) props.onCancel(params);
+      // 保存成功后刷新章节树
+      if (props.fetchFinish) props.fetchFinish(params);
+      else if (props.onCancel) props.onCancel(params as any);
     });
   }
 
@@ -72,7 +76,7 @@ export default function DocChapterModal({ children, parentId, title, record, ...
     form.setFieldsValue(getInitialValues());
   }, [props.open]);
 
-  const loading = loadingEffect[api.getUrl('save')] || loadingEffect[api.getUrl('update')];
+  const loading = useApiLoading([api.getUrl('save'), api.getUrl('update')]);
   return (
     <span>
       <span onClick={showModal}>{children}</span>
