@@ -5,6 +5,7 @@ import { docApi, docChapterApi, docChapterDetailApi } from "@/services";
 import { Empty, FloatButton, Splitter, Switch } from "antd";
 import { Helmet } from 'react-helmet-async';
 import { BaseTree, FaFlexRestLayout, FaUtils, PageLoading, ThemeLayoutContext, useApiLoading, useQs } from "@fa/ui";
+import type { Fa } from "@fa/ui";
 import { DocLayout } from "@features/fa-doc-pages/layout";
 import { ConfigLayoutContext } from "@/layout";
 import { isNil } from "lodash";
@@ -33,6 +34,8 @@ export default function index() {
   const [doc, setDoc] = useState<Dm.Doc>()
   const [docChapter, setDocChapter] = useState<Dm.DocChapter>();
   const [docChapterDetail, setDocChapterDetail] = useState<Dm.DocChapterDetail>();
+  // 复用左侧目录已加载的章节树，供上下两个章节导航使用，避免重复请求
+  const [chapterTree, setChapterTree] = useState<Fa.TreeNode<Dm.DocChapter>[]>();
 
   const loading = useApiLoading(docApi.getUrl(`outGetByShareCode/${shareCode}`))
 
@@ -137,6 +140,7 @@ export default function index() {
                     showOprBtn={false}
                     showTopBtn={false}
                     onSelect={onTreeSelect}
+                    onGetTree={setChapterTree}
                     // 自定义配置
                     serviceName="章节"
                     serviceApi={{
@@ -166,6 +170,8 @@ export default function index() {
                   <DocFooterNav
                     shareCode={shareCode}
                     docChapterId={docChapter?.id}
+                    chapterTree={chapterTree}
+                    parentChapterTree
                     onClickItem={handleClickDocChapter}
                   />
                 </div>
@@ -177,6 +183,8 @@ export default function index() {
                   <DocFooterNav
                     shareCode={shareCode}
                     docChapterId={docChapter?.id}
+                    chapterTree={chapterTree}
+                    parentChapterTree
                     onClickItem={handleClickDocChapter}
                   />
                 </div>

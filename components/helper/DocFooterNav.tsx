@@ -23,6 +23,10 @@ export interface DocFooterNavProps {
   docId?: number;
   shareCode?: string;
   docChapterId?: number;
+  /** 父页面已加载的章节树，传入后复用该顺序 */
+  chapterTree?: Fa.TreeNode<Dm.DocChapter>[];
+  /** 章节树由父页面提供（可能仍在加载中），本组件不再单独请求章节树 */
+  parentChapterTree?: boolean;
   onClickItem?: (v: Dm.DocChapter) => void;
 }
 
@@ -30,12 +34,17 @@ export interface DocFooterNavProps {
  * @author xu.pengfei
  * @date 2023/7/15 21:28
  */
-export default function DocFooterNav({ docId, shareCode, docChapterId, onClickItem }: DocFooterNavProps) {
+export default function DocFooterNav({ docId, shareCode, docChapterId, chapterTree, parentChapterTree, onClickItem }: DocFooterNavProps) {
 
   // const [tree, setTree] = useState<Fa.TreeNode<Dm.DocChapter>[]>([])
   const [array, setArray] = useState<Dm.DocChapter[]>([])
 
   useEffect(() => {
+    // 父页面提供章节树时直接复用，避免同一页面重复请求
+    if (parentChapterTree) {
+      setArray(flatTreeList(chapterTree))
+      return
+    }
     if (shareCode) {
       docChapterApi.outGetTree(shareCode).then(res => {
         setArray(flatTreeList(res.data))
@@ -47,7 +56,7 @@ export default function DocFooterNav({ docId, shareCode, docChapterId, onClickIt
       // setTree(tree)
       setArray(flatTreeList(res.data))
     })
-  }, [docId, shareCode])
+  }, [docId, shareCode, chapterTree, parentChapterTree])
 
   function handleClick(index: number) {
     const item = array[index];
